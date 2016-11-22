@@ -60,8 +60,8 @@ public class MainActivity extends Activity
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT1 = "Link My Google Calendar";
-    private static final String BUTTON_TEXT2 = "Add Event";
+    private static final String BUTTON_TEXT1 = "Link My Google Calendar to TimeKeeper";
+    private static final String BUTTON_TEXT2 = "Create an Additional Event";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR};
 
@@ -78,7 +78,7 @@ public class MainActivity extends Activity
                 LinearLayout.LayoutParams.MATCH_PARENT);
         activityLayout.setLayoutParams(lp);
         activityLayout.setOrientation(LinearLayout.VERTICAL);
-        activityLayout.setPadding(16, 16, 16, 16);
+        activityLayout.setPadding(16, 16, 16, 18);
 
 
         ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
@@ -122,18 +122,18 @@ public class MainActivity extends Activity
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-//        mCallApiButton = new Button(this);
-//        mCallApiButton.setText(BUTTON_TEXT2);
-//        mCallApiButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mCallApiButton.setEnabled(false);
-//                mOutputText.setText("");
-//                addEventApi();
-//                mCallApiButton.setEnabled(true);
-//            }
-//        });
-//        activityLayout.addView(mCallApiButton);
+        mCallApiButton = new Button(this);
+        mCallApiButton.setText(BUTTON_TEXT2);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton.setEnabled(false);
+                mOutputText.setText("");
+                
+                mCallApiButton.setEnabled(true);
+            }
+        });
+        activityLayout.addView(mCallApiButton);
     }
 
 
