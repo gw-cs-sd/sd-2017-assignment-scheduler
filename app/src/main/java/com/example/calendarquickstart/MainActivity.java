@@ -29,6 +29,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
@@ -62,6 +63,8 @@ public class MainActivity extends Activity
 
     private static final String BUTTON_TEXT1 = "Link My Google Calendar to TimeKeeper";
     private static final String BUTTON_TEXT2 = "Create an Additional Event";
+    private static final String BUTTON_TEXT3 = "Begin Assignment";
+
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR};
 
@@ -129,11 +132,39 @@ public class MainActivity extends Activity
             public void onClick(View v) {
                 mCallApiButton.setEnabled(false);
                 mOutputText.setText("");
-                
+                startActivity(new Intent(MainActivity.this, eventCreate.class));
+
+
                 mCallApiButton.setEnabled(true);
             }
         });
         activityLayout.addView(mCallApiButton);
+
+        mCallApiButton = new Button(this);
+        mCallApiButton.setText(BUTTON_TEXT3);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton.setEnabled(false);
+                new CountDownTimer(30000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        mOutputText.setText("seconds remaining: " + millisUntilFinished / 1000);
+                        //here you can have your logic to set text to edittext
+                    }
+
+                    public void onFinish() {
+                        mOutputText.setText("done!");
+                    }
+
+                }.start();
+
+                mCallApiButton.setEnabled(true);
+            }
+        });
+        activityLayout.addView(mCallApiButton);
+
+
     }
 
 
