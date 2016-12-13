@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_event_create"
@@ -21,72 +22,64 @@
 
 
         <TextView
-            android:text="Fill out the Event details"
+            android:text="Provide the following details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2" />
+            android:textSize = "25dp"
+            android:id="@+id/prompt" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Name of assignment"
+            android:ems="10"
+            android:textSize = "25dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/summary"
+            android:layout_weight="0.13" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:text="Name"
+            android:textSize = "25dp"
             android:ems="10"
-            android:id="@+id/editText4" />
+            android:layout_marginTop="10dp"
+            android:id="@+id/description" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:text="Name"
+            android:textSize = "25dp"
             android:ems="10"
-            android:id="@+id/editText12" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:ems="10"
+            android:layout_marginTop="10dp"
             android:id="@+id/editText7" />
 
-        <EditText
+        <TextView
+            android:text="Choose the type of assignment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:ems="10"
-            android:id="@+id/editText8" />
+            android:layout_height="36dp"
+            android:textSize = "25dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/textView" />
 
-        <EditText
+        <Spinner
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:ems="10"
-            android:id="@+id/editText9" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:ems="10"
-            android:id="@+id/editText10" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:ems="10"
-            android:id="@+id/editText11" />
+            android:layout_height="54dp"
+            android:id="@+id/type"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
 
         <Button
             android:text="Submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/submit"
+            android:layout_marginTop="15dp"
             android:onClick = "onClick"/>
 
     </LinearLayout>
