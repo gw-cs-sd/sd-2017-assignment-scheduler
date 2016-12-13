@@ -24,11 +24,22 @@ public class eventCreate extends AppCompatActivity {
         setContentView(R.layout.activity_event_create);
 
         Spinner dropdown = (Spinner)findViewById(R.id.type);
-        String[] items = new String[]{"Reading", "Math Problems", "Essay"};
+        String[] items = new String[]{"reading", "math", "essay"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
         MainActivity.cEvent = true;
+        Event createEvent = new Event();
+
+
+//        EditText summary = (EditText) findViewById(R.id.summary);
+//        EditText description = (EditText) findViewById(R.id.description);
+//        EditText et = (EditText) findViewById(R.id.et);
+//        Spinner type =(Spinner) findViewById(R.id.type);
+//
+//        MainActivity.newEvent.setSummary(summary.getText().toString());
+//        MainActivity.newEvent.setDescription(description.getText().toString());
+//        MainActivity.assignment = type.getSelectedItem().toString();
 
 
 //        Event event = new Event()
@@ -37,12 +48,21 @@ public class eventCreate extends AppCompatActivity {
 //                .setDescription("New Event");
 
 
-
-
+        MainActivity.newEvent = createEvent;
     }
 
 
     public void onClick(View v) {
+
+        EditText summary = (EditText) findViewById(R.id.summary);
+        EditText description = (EditText) findViewById(R.id.description);
+        EditText et = (EditText) findViewById(R.id.et);
+        Spinner type =(Spinner) findViewById(R.id.type);
+
+        MainActivity.newEvent.setSummary(summary.getText().toString());
+        MainActivity.newEvent.setDescription(description.getText().toString());
+        MainActivity.assignment = type.getSelectedItem().toString();
+
 
         Intent intent = new Intent (this, MainActivity.class);
         startActivity(intent);

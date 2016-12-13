@@ -12,9 +12,10 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 
-import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.*;
 import com.google.api.client.util.DateTime;
 
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 
 import android.Manifest;
@@ -44,6 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -68,9 +70,11 @@ public class MainActivity extends Activity
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR};
 
-    Event newEvent = new Event();
 
+    public static Event newEvent;
+    public static String assignment;
     public static boolean cEvent;
+    public static long timeBlock;
 
     /**
      * Create the main activity.
@@ -413,12 +417,25 @@ public class MainActivity extends Activity
 
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-            com.google.api.services.calendar.Calendar service = new com.google.api.services.calendar.Calendar.Builder(
+            Calendar service = new Calendar.Builder(
                     transport, jsonFactory, mCredential)
                     .setApplicationName("R_D_Location Callendar")
                     .build();
 
-            long timeBlock = 1;
+
+            if(assignment.equals("reading")){
+
+                timeBlock = 7200000;
+            }
+            else if(assignment.equals("math")){
+
+                timeBlock = 5000000;
+            }
+            else if(assignment.equals("essay")){
+
+                timeBlock = 10000000;
+            }
+
             //find next available free time
             DateTime now = new DateTime(System.currentTimeMillis());
             DateTime mourning = now;
@@ -447,34 +464,33 @@ public class MainActivity extends Activity
                 end = event.getEnd().getDateTime();
             }
 
-            Event event = new Event()
-                    .setSummary("Reading assignment")
-                    .setLocation("GWU")
-                    .setDescription("New Event");
+
+            newEvent.setLocation("GWU");
 
             EventDateTime eventStart = new EventDateTime()
                     .setDateTime(start)
-                    .setTimeZone("Asia/Dhaka");
-            event.setStart(eventStart);
+                    .setTimeZone("EST");
+            newEvent.setStart(eventStart);
 
+            DateTime endValue = new DateTime(start.getValue() + timeBlock);
             EventDateTime eventEnd = new EventDateTime()
-                    .setDateTime(end)
-                    .setTimeZone("Asia/Dhaka");
-            event.setEnd(eventEnd);
+                    .setDateTime(endValue)
+                    .setTimeZone("EST");
+            newEvent.setEnd(eventEnd);
 
             String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=1"};
-            event.setRecurrence(Arrays.asList(recurrence));
+            newEvent.setRecurrence(Arrays.asList(recurrence));
 
 
 
 
             String calendarId = "primary";
             try {
-                event = service.events().insert(calendarId, event).execute();
+                newEvent = service.events().insert(calendarId, newEvent).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.printf("Event created: %s\n", event.getHtmlLink());
+            System.out.printf("Event created: %s\n", newEvent.getHtmlLink());
 
         }
 
