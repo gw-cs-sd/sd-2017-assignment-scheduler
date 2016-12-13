@@ -61,12 +61,14 @@ public class MainActivity extends Activity
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT1 = "Link My Google Calendar to TimeKeeper";
+    private static final String BUTTON_TEXT1 = "View my current calendar";
     private static final String BUTTON_TEXT2 = "Create an Additional Event";
     private static final String BUTTON_TEXT3 = "Begin Assignment";
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR};
+
+    public static boolean newEvent;
 
     /**
      * Create the main activity.
@@ -125,6 +127,9 @@ public class MainActivity extends Activity
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
+
+
+        //send to create event activity
         mCallApiButton = new Button(this);
         mCallApiButton.setText(BUTTON_TEXT2);
         mCallApiButton.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +137,7 @@ public class MainActivity extends Activity
             public void onClick(View v) {
                 mCallApiButton.setEnabled(false);
                 mOutputText.setText("");
+
                 startActivity(new Intent(MainActivity.this, eventCreate.class));
 
 
@@ -140,24 +146,15 @@ public class MainActivity extends Activity
         });
         activityLayout.addView(mCallApiButton);
 
+
+        //Timer
         mCallApiButton = new Button(this);
         mCallApiButton.setText(BUTTON_TEXT3);
         mCallApiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCallApiButton.setEnabled(false);
-                new CountDownTimer(30000, 1000) {
-
-                    public void onTick(long millisUntilFinished) {
-                        mOutputText.setText("seconds remaining: " + millisUntilFinished / 1000);
-                        //here you can have your logic to set text to edittext
-                    }
-
-                    public void onFinish() {
-                        mOutputText.setText("done!");
-                    }
-
-                }.start();
+                startActivity(new Intent(MainActivity.this, assignTracker.class));
 
                 mCallApiButton.setEnabled(true);
             }
@@ -365,7 +362,10 @@ public class MainActivity extends Activity
         protected List<String> doInBackground(Void... params) {
 
             try {
-                createEvent(mCredential);
+                if(newEvent){
+                    createEvent(mCredential);
+                    newEvent = false;
+                }
                 return getDataFromApi();
             } catch (Exception e) {
                 mLastError = e;
@@ -462,11 +462,11 @@ public class MainActivity extends Activity
             String[] recurrence = new String[]{"RRULE:FREQ=DAILY;COUNT=2"};
             event.setRecurrence(Arrays.asList(recurrence));
 
-            EventAttendee[] attendees = new EventAttendee[]{
-                    new EventAttendee().setEmail("abir@aksdj.com"),
-                    new EventAttendee().setEmail("asdasd@andlk.com"),
-            };
-            event.setAttendees(Arrays.asList(attendees));
+//            EventAttendee[] attendees = new EventAttendee[]{
+//                    new EventAttendee().setEmail("abir@aksdj.com"),
+//                    new EventAttendee().setEmail("asdasd@andlk.com"),
+//            };
+//            event.setAttendees(Arrays.asList(attendees));
 
 
             String calendarId = "primary";
