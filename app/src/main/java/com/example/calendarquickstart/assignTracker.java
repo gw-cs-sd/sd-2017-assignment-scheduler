@@ -1,5 +1,6 @@
 package com.example.calendarquickstart;
 
+import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
+
+import com.google.api.services.calendar.model.Event;
 
 public class assignTracker extends AppCompatActivity {
 
@@ -20,12 +23,19 @@ public class assignTracker extends AppCompatActivity {
     private boolean isCanceled = false;
 
     private long timeRemaining = 0;
+    public long eventLength = 0;
+    public long mod = 0;
+
+
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assign_tracker);
+
+        eventLength = Math.abs(MainActivity.currentEvent.getEnd().getDateTime().getValue() - MainActivity.currentEvent.getStart().getDateTime().getValue());
+
 
         tv =(TextView)findViewById(R.id.tv);
         bStart = (Button) findViewById(R.id.start);
@@ -34,6 +44,8 @@ public class assignTracker extends AppCompatActivity {
 
         bPause.setEnabled(false);
         bEnd.setEnabled(false);
+
+        tv.setText("Seconds Remaining" + (eventLength/1000));
 
         bStart.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -50,7 +62,7 @@ public class assignTracker extends AppCompatActivity {
                 bEnd.setEnabled(true);
 
                 CountDownTimer timer;
-                long millisInFuture = 30000; //30 seconds
+                long millisInFuture = eventLength; //30 seconds
                 long countDownInterval = 1000; //1 second
 
 
@@ -138,6 +150,7 @@ public class assignTracker extends AppCompatActivity {
                              //Enable the start button
                              bStart.setEnabled(true);
 
+                             mod = (long)((timeRemaining * (0.333)));
                              //Notify the user that CountDownTimer is canceled/stopped
                              tv.setText("Time Tracker has stopped");
                          }
@@ -168,17 +181,28 @@ public class assignTracker extends AppCompatActivity {
                 bEnd.setEnabled(false);
                 //Enable the start button
                 bStart.setEnabled(true);
-
+                mod = (long)((timeRemaining * (0.333)));
                 //Notify the user that CountDownTimer is canceled/stopped
-                tv.setText("CountDownTimer Canceled/stopped.");
+                tv.setText("CountDownTimer Canceled/stopped." + timeRemaining);
             }
         });
+
+
 
     }
 
 
     public void returns(View v){
 
+        if(MainActivity.currentEvent.getDescription().equals("reading")){
+            MainActivity.rMod -= mod;
+        }
+        else if(MainActivity.currentEvent.getDescription().equals("math")){
+            MainActivity.mMod -= mod;
+        }
+        else{
+            MainActivity.eMod -= mod;
+        }
         Intent intent = new Intent (this, MainActivity.class);
         startActivity(intent);
     }

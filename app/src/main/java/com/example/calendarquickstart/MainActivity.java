@@ -18,6 +18,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.*;
 
+
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -66,6 +67,7 @@ public class MainActivity extends Activity
     private static final String BUTTON_TEXT1 = "View my current calendar";
     private static final String BUTTON_TEXT2 = "Create an Additional Event";
     private static final String BUTTON_TEXT3 = "Begin Assignment";
+    private static final String BUTTON_TEXT4 = "Settings/Preferences";
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR};
@@ -75,6 +77,14 @@ public class MainActivity extends Activity
     public static String assignment;
     public static boolean cEvent;
     public static long timeBlock;
+    public static long reading;
+    public static long math;
+    public static long essay;
+    public static int rMod;
+    public static int mMod;
+    public static int eMod;
+    public static long modifier;
+    public static Event currentEvent;
 
     /**
      * Create the main activity.
@@ -120,7 +130,7 @@ public class MainActivity extends Activity
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Please click the \'" + BUTTON_TEXT1 +"\' button to link your Google Calendar");
+                "Please click the \'" + BUTTON_TEXT1 +"\' button to view your Calendar");
         activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
@@ -143,7 +153,7 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View v) {
                 mCallApiButton.setEnabled(false);
-                mOutputText.setText("");
+
 
                 startActivity(new Intent(MainActivity.this, eventCreate.class));
 
@@ -162,6 +172,21 @@ public class MainActivity extends Activity
             public void onClick(View v) {
                 mCallApiButton.setEnabled(false);
                 startActivity(new Intent(MainActivity.this, assignTracker.class));
+
+                mCallApiButton.setEnabled(true);
+            }
+        });
+        activityLayout.addView(mCallApiButton);
+
+        mCallApiButton = new Button(this);
+        mCallApiButton.setText(BUTTON_TEXT4);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton.setEnabled(false);
+                mOutputText.setText("");
+
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
                 mCallApiButton.setEnabled(true);
             }
@@ -399,6 +424,7 @@ public class MainActivity extends Activity
                     .execute();
             List<Event> items = events.getItems();
 
+            currentEvent = items.get(0);
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
                 if (start == null) {
@@ -422,18 +448,21 @@ public class MainActivity extends Activity
                     .setApplicationName("R_D_Location Callendar")
                     .build();
 
+            reading = 7200000;
+            math = 5000000;
+            essay = 10000000;
 
             if(assignment.equals("reading")){
 
-                timeBlock = 7200000;
+                timeBlock = reading + rMod;
             }
             else if(assignment.equals("math")){
 
-                timeBlock = 5000000;
+                timeBlock = math + mMod;
             }
             else if(assignment.equals("essay")){
 
-                timeBlock = 10000000;
+                timeBlock = essay + eMod;
             }
 
             //find next available free time
@@ -453,15 +482,19 @@ public class MainActivity extends Activity
             DateTime start = null;
             DateTime temp = null;
             DateTime end = now;
-            for (Event event : items) {
-                start = event.getStart().getDateTime();
-                if(start.getValue() - end.getValue() >= timeBlock){
-                    temp = start;
-                    start = end;
-                    end = start;
-                    break;
+            if(!items.isEmpty()) {
+                for (Event event : items) {
+                    start = event.getStart().getDateTime();
+                    if (start.getValue() - end.getValue() >= timeBlock) {
+                        temp = start;
+                        start = end;
+                        end = start;
+                        break;
+                    }
+                    end = event.getEnd().getDateTime();
                 }
-                end = event.getEnd().getDateTime();
+            }else{
+                start = now;
             }
 
 

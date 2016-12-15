@@ -59,16 +59,21 @@ public class eventCreate extends AppCompatActivity {
         EditText et = (EditText) findViewById(R.id.et);
         Spinner type =(Spinner) findViewById(R.id.type);
 
+
         MainActivity.newEvent.setSummary(summary.getText().toString());
-        MainActivity.newEvent.setDescription(description.getText().toString());
+        MainActivity.newEvent.setDescription(type.getSelectedItem().toString());
+        //MainActivity.newEvent.setLocation();
         MainActivity.assignment = type.getSelectedItem().toString();
+
 
 
         Intent intent = new Intent (this, MainActivity.class);
         startActivity(intent);
     }
 
-
-
-
 }
+
+
+
+
+
