@@ -74,6 +74,13 @@
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown"/>
 
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:id="@+id/time"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
+
         <Button
             android:text="Submit"
             android:layout_width="match_parent"

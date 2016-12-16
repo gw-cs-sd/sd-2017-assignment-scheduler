@@ -47,6 +47,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Date;
+
+
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -75,6 +78,7 @@ public class MainActivity extends Activity
 
     public static Event newEvent;
     public static String assignment;
+    public static String timeOfDay;
     public static boolean cEvent;
     public static long timeBlock;
     public static long reading;
@@ -85,6 +89,7 @@ public class MainActivity extends Activity
     public static int eMod;
     public static long modifier;
     public static Event currentEvent;
+    public static long timeDay;
 
     /**
      * Create the main activity.
@@ -465,12 +470,30 @@ public class MainActivity extends Activity
                 timeBlock = essay + eMod;
             }
 
+            long currentTime = System.currentTimeMillis();
+            long delta = currentTime % 24 * 60 * 60 * 1000;
+            long midnight = currentTime - delta;
+
+            DateTime now = new DateTime(System.currentTimeMillis() + 86400000);
+
+//            if(timeOfDay.equals("morning")){
+//
+//                DateTime r = new DateTime((long)(midnight + 25200000));
+//                now = r;
+//            }
+//            else if(timeOfDay.equals("evening")){
+//
+//                DateTime m = new DateTime((long) (midnight + 43200000));
+//                now = m;
+//            }
+//            else if(timeOfDay.equals("night")){
+//
+//                DateTime e = new DateTime((long) (midnight + 61200000));
+//                now = e;
+//            }
+
+
             //find next available free time
-            DateTime now = new DateTime(System.currentTimeMillis());
-            DateTime mourning = now;
-            DateTime evening = now;
-            DateTime afternoon = now;
-            DateTime night = now;
 
             Events events = mService.events().list("primary")
                     .setMaxResults(10)
@@ -523,7 +546,7 @@ public class MainActivity extends Activity
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.printf("Event created: %s\n", newEvent.getHtmlLink());
+
 
         }
 
