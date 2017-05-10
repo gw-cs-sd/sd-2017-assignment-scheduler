@@ -100,6 +100,7 @@ public class MainActivity extends Activity
     private static final String BUTTON_TEXT2 = "Create an Additional Event";
     private static final String BUTTON_TEXT3 = "Begin Assignment";
     private static final String BUTTON_TEXT4 = "Settings/Preferences";
+    private static final String BUTTON_TEXT5 = "Student Event List";
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR};
@@ -263,6 +264,21 @@ public class MainActivity extends Activity
         activityLayout.addView(mCallApiButton);
 
 
+        mCallApiButton = new Button(this);
+        mCallApiButton.setText(BUTTON_TEXT5);
+        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton.setEnabled(false);
+                mOutputText.setText("");
+
+                startActivity(new Intent(MainActivity.this, Main2Activity.class));
+
+                mCallApiButton.setEnabled(true);
+            }
+        });
+        activityLayout.addView(mCallApiButton);
+
 
 
         mCallApiButton = new Button(this);
@@ -282,11 +298,11 @@ public class MainActivity extends Activity
 
 
 
-        btnAdd = (Button) findViewById(R.id.btnAdd);
-//        btnAdd.setOnClickListener(this);
 
-        btnGetAll = (Button) findViewById(R.id.btnGetAll);
-//        btnGetAll.setOnClickListener(this);
+
+
+
+
 
 
 
