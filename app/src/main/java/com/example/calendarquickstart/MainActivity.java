@@ -23,7 +23,11 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,8 +37,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -42,12 +50,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.Date;
+
+import java.lang.Object;
 
 
 
@@ -61,6 +72,8 @@ public class MainActivity extends Activity
     private EditText et;
     private Button mCallApiButton;
     ProgressDialog mProgress;
+    private int test = 0;
+    private com.google.api.services.calendar.Calendar mService = null;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -76,7 +89,7 @@ public class MainActivity extends Activity
     private static final String[] SCOPES = { CalendarScopes.CALENDAR};
 
 
-    public static Event newEvent;
+    public static Event newEvent = null;
     public static String assignment;
     public static String timeOfDay;
     public static boolean cEvent;
@@ -90,6 +103,17 @@ public class MainActivity extends Activity
     public static long modifier;
     public static Event currentEvent;
     public static long timeDay;
+    public static long prez = 0;
+
+    public static long comp_reading = 400;
+    public static long comp_essay = 0;
+    public static long comp_math = 0;
+
+    public static long task = 50;
+    public static long it = 0;
+
+
+
 
     /**
      * Create the main activity.
@@ -111,6 +135,9 @@ public class MainActivity extends Activity
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
+
+
+
         mCallApiButton = new Button(this);
         mCallApiButton.setText(BUTTON_TEXT1);
         mCallApiButton.setOnClickListener(new View.OnClickListener() {
@@ -127,15 +154,14 @@ public class MainActivity extends Activity
         activityLayout.addView(mCallApiButton);
 
 
-
         mOutputText = new TextView(this);
         mOutputText.setLayoutParams(tlp);
         mOutputText.setPadding(16, 16, 16, 16);
-        mOutputText.setTextSize(16);
+        mOutputText.setTextSize(20);
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Please click the \'" + BUTTON_TEXT1 +"\' button to view your Calendar");
+                "Please click the \'" + BUTTON_TEXT1 + "\' button to view your Calendar");
         activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
@@ -148,7 +174,6 @@ public class MainActivity extends Activity
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
 
 
         //send to create event activity
@@ -183,6 +208,9 @@ public class MainActivity extends Activity
         });
         activityLayout.addView(mCallApiButton);
 
+
+
+
         mCallApiButton = new Button(this);
         mCallApiButton.setText(BUTTON_TEXT4);
         mCallApiButton.setOnClickListener(new View.OnClickListener() {
@@ -197,6 +225,64 @@ public class MainActivity extends Activity
             }
         });
         activityLayout.addView(mCallApiButton);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.notification_icon)
+                        .setContentTitle("My notification")
+                        .setContentText("Scheduled assignment");
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, assignTracker.class);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(this);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+    }
+
+
+        // Sets up and implements live notifications for when its time for an scheduled assignment
+        public void myNotif(){
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.notification_icon)
+                            .setContentTitle("My notification")
+                            .setContentText("Scheduled assignment");
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(this, assignTracker.class);
+
+            // The stack builder object will contain an artificial back stack for the
+            // started Activity.
+            // This ensures that navigating backward from the Activity leads out of
+            // your application to the Home screen.
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            // Adds the back stack for the Intent (but not the Intent itself)
+            stackBuilder.addParentStack(this);
+            // Adds the Intent that starts the Activity to the top of the stack
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(1, mBuilder.build());
+            // mId allows you to update the notification later on.
+
 
 
     }
@@ -400,9 +486,36 @@ public class MainActivity extends Activity
 
             try {
                 if(cEvent){
+                    eventAlg();
                     createEvent(mCredential);
                     cEvent = false;
                 }
+
+
+
+                DateTime now = new DateTime(System.currentTimeMillis());
+                List<String> eventStrings = new ArrayList<String>();
+                Events events = mService.events().list("primary")
+                        .setMaxResults(5)
+                        .setTimeMin(now)
+                        .setOrderBy("startTime")
+                        .setSingleEvents(true)
+                        .execute();
+                List<Event> items = events.getItems();
+
+                Event nEvent = items.get(0);
+
+                long eventTime = nEvent.getStart().getDateTime().getValue();
+
+
+
+                if(eventTime - System.currentTimeMillis() < 10000000){
+                    Log.d("tag", String.valueOf(currentEvent));
+                    Log.d("tag", String.valueOf(System.currentTimeMillis()));
+                    myNotif();
+
+                }
+
                 return getDataFromApi();
             } catch (Exception e) {
                 mLastError = e;
@@ -418,11 +531,13 @@ public class MainActivity extends Activity
          */
         private List<String> getDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
+
+
             DateTime now = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
             List<String> testStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
-                    .setMaxResults(5)
+                    .setMaxResults(10)
                     .setTimeMin(now)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
@@ -430,6 +545,8 @@ public class MainActivity extends Activity
             List<Event> items = events.getItems();
 
             currentEvent = items.get(0);
+            currentEvent.setDescription(" ");
+
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
                 if (start == null) {
@@ -446,6 +563,7 @@ public class MainActivity extends Activity
 
         public void createEvent(GoogleAccountCredential mCredential) throws IOException {
 
+
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             Calendar service = new Calendar.Builder(
@@ -457,24 +575,26 @@ public class MainActivity extends Activity
             math = 5000000;
             essay = 10000000;
 
+
             if(assignment.equals("reading")){
 
-                timeBlock = reading + rMod;
+                timeBlock = timeBlock + rMod;
             }
             else if(assignment.equals("math")){
 
-                timeBlock = math + mMod;
+                timeBlock = timeBlock + mMod;
             }
             else if(assignment.equals("essay")){
 
-                timeBlock = essay + eMod;
+                timeBlock = timeBlock + eMod;
             }
 
             long currentTime = System.currentTimeMillis();
             long delta = currentTime % 24 * 60 * 60 * 1000;
             long midnight = currentTime - delta;
 
-            DateTime now = new DateTime(System.currentTimeMillis() + 86400000);
+            DateTime now = new DateTime(System.currentTimeMillis() + 156400000 + it);
+            //it = it + 75000000;
 
 //            if(timeOfDay.equals("morning")){
 //
@@ -550,9 +670,37 @@ public class MainActivity extends Activity
 
         }
 
-//
-//
+        public void eventAlg (){
+            long avgRead = 315;
+            long avgMath = 260;
+            long avgWrite = 375;
 
+            long output =0;
+
+            if(assignment.equals("reading")){
+
+                //avgRead = 303;
+                output = ((task * comp_reading)*avgRead);
+
+            }
+            else if(assignment.equals("math")){
+
+                //avgMath = 500;
+                output = ((task * comp_reading)*avgMath);
+
+            }
+            else if(assignment.equals("essay")){
+
+                //avgWrite = 700;
+                output = ((task * comp_reading)*avgWrite);
+
+            }
+
+
+            timeBlock = output;
+
+        }
+//
 
 
         @Override
@@ -567,7 +715,7 @@ public class MainActivity extends Activity
             if (output == null || output.size() == 0) {
                 mOutputText.setText("No results returned.");
             } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
+                output.add(0, "Your upcoming events:");
                 mOutputText.setText(TextUtils.join("\n", output));
             }
         }
@@ -594,3 +742,4 @@ public class MainActivity extends Activity
         }
     }
 }
+
