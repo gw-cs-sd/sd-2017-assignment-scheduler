@@ -22,69 +22,69 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class StudentDetail extends ActionBarActivity implements android.view.View.OnClickListener{
+public class evenDetail extends ActionBarActivity implements android.view.View.OnClickListener{
 
     Button btnSave ,  btnDelete;
     Button btnClose;
     EditText editTextName;
-    EditText editTextEmail;
-    EditText editTextAge;
-    private int _Student_Id=0;
+    EditText editTextDes;
+    EditText editTextTask;
+    private int _Even_Id=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_detail);
+        setContentView(R.layout.activity_event_detail);
 
         btnSave = (Button) findViewById(R.id.btnSave);
         btnDelete = (Button) findViewById(R.id.btnDelete);
         btnClose = (Button) findViewById(R.id.btnClose);
 
         editTextName = (EditText) findViewById(R.id.editTextName);
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextAge = (EditText) findViewById(R.id.editTextAge);
+        editTextDes = (EditText) findViewById(R.id.editTextDes);
+        editTextTask = (EditText) findViewById(R.id.editTextTask);
 
         btnSave.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnClose.setOnClickListener(this);
 
 
-        _Student_Id =0;
+        _Even_Id =0;
         Intent intent = getIntent();
-        _Student_Id =intent.getIntExtra("student_Id", 0);
-        StudentRepo repo = new StudentRepo(this);
-        Student student = new Student();
-        student = repo.getStudentById(_Student_Id);
+        _Even_Id =intent.getIntExtra("even_Id", 0);
+        EvenRepo repo = new EvenRepo(this);
+        Even even = new Even();
+        even = repo.getEvenById(_Even_Id);
 
-        editTextAge.setText(String.valueOf(student.age));
-        editTextName.setText(student.name);
-        editTextEmail.setText(student.email);
+        editTextTask.setText(String.valueOf(even.task));
+        editTextName.setText(even.name);
+        editTextDes.setText(even.des);
     }
 
 
 
     public void onClick(View view) {
         if (view == findViewById(R.id.btnSave)){
-            StudentRepo repo = new StudentRepo(this);
-            Student student = new Student();
-            student.age= Integer.parseInt(editTextAge.getText().toString());
-            student.email=editTextEmail.getText().toString();
-            student.name=editTextName.getText().toString();
-            student.student_ID=_Student_Id;
+            EvenRepo repo = new EvenRepo(this);
+            Even even = new Even();
+            even.task= Integer.parseInt(editTextTask.getText().toString());
+            even.des=editTextDes.getText().toString();
+            even.name=editTextName.getText().toString();
+            even.even_ID=_Even_Id;
 
-            if (_Student_Id==0){
-                _Student_Id = repo.insert(student);
+            if (_Even_Id==0){
+                _Even_Id = repo.insert(even);
 
-                Toast.makeText(this,"New Student Insert",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"New even Insert",Toast.LENGTH_SHORT).show();
             }else{
 
-                repo.update(student);
-                Toast.makeText(this,"Student Record updated",Toast.LENGTH_SHORT).show();
+                repo.update(even);
+                Toast.makeText(this,"even Record updated",Toast.LENGTH_SHORT).show();
             }
         }else if (view== findViewById(R.id.btnDelete)){
-            StudentRepo repo = new StudentRepo(this);
-            repo.delete(_Student_Id);
-            Toast.makeText(this, "Student Record Deleted", Toast.LENGTH_SHORT);
+            EvenRepo repo = new EvenRepo(this);
+            repo.delete(_Even_Id);
+            Toast.makeText(this, "even Record Deleted", Toast.LENGTH_SHORT);
             finish();
         }else if (view== findViewById(R.id.btnClose)){
             finish();

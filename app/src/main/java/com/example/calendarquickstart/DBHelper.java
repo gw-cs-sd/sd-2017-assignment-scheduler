@@ -1,5 +1,9 @@
 package com.example.calendarquickstart;
 
+
+/**
+ * Created by IT001 on 23-Jun-16.
+ */
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -21,11 +25,11 @@ public class DBHelper  extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //All necessary tables you like to create will create here
 
-        String CREATE_TABLE_STUDENT = "CREATE TABLE " + Student.TABLE  + "("
-                + Student.KEY_ID  + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
-                + Student.KEY_name + " TEXT, "
-                + Student.KEY_age + " INTEGER, "
-                + Student.KEY_email + " TEXT )";
+        String CREATE_TABLE_STUDENT = "CREATE TABLE " + Even.TABLE  + "("
+                + Even.KEY_ID  + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+                + Even.KEY_name + " TEXT, "
+                + Even.KEY_task + " INTEGER, "
+                + Even.KEY_des + " TEXT )";
 
         db.execSQL(CREATE_TABLE_STUDENT);
 
@@ -34,7 +38,7 @@ public class DBHelper  extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed, all data will be gone!!!
-        db.execSQL("DROP TABLE IF EXISTS " + Student.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Even.TABLE);
 
         // Create tables again
         onCreate(db);

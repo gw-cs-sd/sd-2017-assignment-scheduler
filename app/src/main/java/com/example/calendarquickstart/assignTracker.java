@@ -1,16 +1,12 @@
 package com.example.calendarquickstart;
 
-import android.app.usage.UsageEvents;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.TextView;
-
-import com.google.api.services.calendar.model.Event;
 
 public class assignTracker extends AppCompatActivity {
 

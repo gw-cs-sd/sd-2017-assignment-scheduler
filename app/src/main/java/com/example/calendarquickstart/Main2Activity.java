@@ -24,15 +24,15 @@ public class Main2Activity extends ListActivity  implements android.view.View.On
     public void onClick(View view) {
         if (view== findViewById(R.id.btnAdd)){
 
-            Intent intent = new Intent(this,StudentDetail.class);
+            Intent intent = new Intent(this,evenDetail.class);
             intent.putExtra("student_Id",0);
             startActivity(intent);
 
         }else {
 
-            StudentRepo repo = new StudentRepo(this);
+            EvenRepo repo = new EvenRepo(this);
 
-            ArrayList<HashMap<String, String>> studentList =  repo.getStudentList();
+            ArrayList<HashMap<String, String>> studentList =  repo.getEvenList();
             if(studentList.size()!=0) {
                 ListView lv = getListView();
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -40,7 +40,7 @@ public class Main2Activity extends ListActivity  implements android.view.View.On
                     public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                         student_Id = (TextView) view.findViewById(R.id.student_Id);
                         String studentId = student_Id.getText().toString();
-                        Intent objIndent = new Intent(getApplicationContext(),StudentDetail.class);
+                        Intent objIndent = new Intent(getApplicationContext(),evenDetail.class);
                         objIndent.putExtra("student_Id", Integer.parseInt( studentId));
                         startActivity(objIndent);
                     }

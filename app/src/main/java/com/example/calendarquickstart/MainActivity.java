@@ -675,7 +675,7 @@ public class MainActivity extends Activity
             long midnight = currentTime - delta;
 
             DateTime now = new DateTime(System.currentTimeMillis() + 156400000 + it);
-            //it = it + 75000000;
+
 
 //            if(timeOfDay.equals("morning")){
 //
