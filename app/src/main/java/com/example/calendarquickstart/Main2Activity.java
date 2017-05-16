@@ -18,37 +18,37 @@ package com.example.calendarquickstart;
 public class Main2Activity extends ListActivity  implements android.view.View.OnClickListener{
 
     Button btnAdd,btnGetAll;
-    TextView student_Id;
+    TextView even_Id;
 
     @Override
     public void onClick(View view) {
         if (view== findViewById(R.id.btnAdd)){
 
-            Intent intent = new Intent(this,evenDetail.class);
-            intent.putExtra("student_Id",0);
+            Intent intent = new Intent(Main2Activity.this,evenDetail.class);
+            intent.putExtra("even_Id",0);
             startActivity(intent);
 
         }else {
 
             EvenRepo repo = new EvenRepo(this);
 
-            ArrayList<HashMap<String, String>> studentList =  repo.getEvenList();
-            if(studentList.size()!=0) {
+            ArrayList<HashMap<String, String>> evenList =  repo.getEvenList();
+            if(evenList.size()!=0) {
                 ListView lv = getListView();
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                        student_Id = (TextView) view.findViewById(R.id.student_Id);
-                        String studentId = student_Id.getText().toString();
+                        even_Id = (TextView) view.findViewById(R.id.event_Id);
+                        String eventId = even_Id.getText().toString();
                         Intent objIndent = new Intent(getApplicationContext(),evenDetail.class);
-                        objIndent.putExtra("student_Id", Integer.parseInt( studentId));
+                        objIndent.putExtra("even_Id", Integer.parseInt( eventId));
                         startActivity(objIndent);
                     }
                 });
-                ListAdapter adapter = new SimpleAdapter( Main2Activity.this,studentList, R.layout.view_student_entry, new String[] { "id","name"}, new int[] {R.id.student_Id, R.id.student_name});
+                ListAdapter adapter = new SimpleAdapter( Main2Activity.this,evenList, R.layout.view_event_entry, new String[] { "id","name"}, new int[] {R.id.event_Id, R.id.event_name});
                 setListAdapter(adapter);
             }else{
-                Toast.makeText(this,"No student!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"No Events!",Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -68,11 +68,7 @@ public class Main2Activity extends ListActivity  implements android.view.View.On
 
     }
 
-    public void returns(View v){
 
-        Intent intent = new Intent (this, MainActivity.class);
-        startActivity(intent);
-    }
 
 
 }

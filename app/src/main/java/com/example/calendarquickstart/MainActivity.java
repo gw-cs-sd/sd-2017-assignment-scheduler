@@ -131,7 +131,7 @@ public class MainActivity extends Activity
 
 
     Button btnAdd,btnGetAll;
-    TextView student_Id;
+    TextView even_Id;
 
 
 
@@ -567,7 +567,7 @@ public class MainActivity extends Activity
 
             try {
                 if(cEvent){
-                    eventAlg();
+//                  //eventAlg();
                     createEvent(mCredential);
                     cEvent = false;
                 }
@@ -659,22 +659,22 @@ public class MainActivity extends Activity
 
             if(assignment.equals("reading")){
 
-                timeBlock = timeBlock + rMod;
+                timeBlock = reading + rMod;
             }
             else if(assignment.equals("math")){
 
-                timeBlock = timeBlock + mMod;
+                timeBlock = math + mMod;
             }
             else if(assignment.equals("essay")){
 
-                timeBlock = timeBlock + eMod;
+                timeBlock = essay + eMod;
             }
 
             long currentTime = System.currentTimeMillis();
             long delta = currentTime % 24 * 60 * 60 * 1000;
             long midnight = currentTime - delta;
 
-            DateTime now = new DateTime(System.currentTimeMillis() + 156400000 + it);
+            DateTime now = new DateTime(System.currentTimeMillis());
 
 
 //            if(timeOfDay.equals("morning")){
@@ -712,8 +712,10 @@ public class MainActivity extends Activity
                     if (start.getValue() - end.getValue() >= timeBlock) {
                         temp = start;
                         start = end;
-                        end = start;
+                        end = temp;
+
                         break;
+
                     }
                     end = event.getEnd().getDateTime();
                 }

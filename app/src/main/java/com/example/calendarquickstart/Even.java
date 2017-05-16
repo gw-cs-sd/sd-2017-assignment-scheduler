@@ -1,9 +1,7 @@
 package com.example.calendarquickstart;
 
 
-/**
- * Created by IT001 on 23-Jun-16.
- */
+
 public class Even {
     // Labels table name
     public static final String TABLE = "Events";

@@ -16,6 +16,15 @@
         android:layout_alignParentStart="true"
         android:text="Add" />
 
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnAdd"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
     <Button
         android:id="@+id/btnGetAll"
         android:layout_width="wrap_content"
@@ -23,22 +32,5 @@
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/btnAdd"
         android:text="List All" />
-
-    <Button
-        android:text="Return"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/back"
-        android:layout_toRightOf="@+id/btnGetAll"
-        android:layout_alignParentBottom="true"
-        android:onClick = "returns"/>
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

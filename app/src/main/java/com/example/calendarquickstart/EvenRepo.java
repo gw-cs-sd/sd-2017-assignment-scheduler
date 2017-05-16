@@ -1,8 +1,6 @@
 package com.example.calendarquickstart;
 
-/**
- * Created by IT001 on 23-Jun-16.
- */
+
         import android.content.ContentValues;
         import android.content.Context;
         import android.database.Cursor;
@@ -28,14 +26,13 @@ public class EvenRepo {
 
         // Inserting Row
         long even_Id = db.insert(Even.TABLE, null, values);
-        db.close(); // Closing database connection
+        db.close();
         return (int) even_Id;
     }
 
     public void delete(int even_Id) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        // It's a good practice to use parameter ?, instead of concatenate string
         db.delete(Even.TABLE, Even.KEY_ID + "= ?", new String[] { String.valueOf(even_Id) });
         db.close(); // Closing database connection
     }
